@@ -1,0 +1,85 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "User API",
+        "description": "API",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000"
+        }
+    ],
+    "paths": {
+        "/api/users/register": {
+            "post": {
+                "description": "Register"
+            }
+        },
+        "/api/users/login": {
+            "post": {
+                "description": "Login"
+            }
+        },
+        "/api/users/profile": {
+            "get": {
+                "description": "Current User"
+            }
+        },
+        "/api/users/update": {
+            "post": {
+                "description": "Update User"
+            }
+        },
+        "/api/users/logout": {
+            "get": {
+                "description": "Logout"
+            }
+        },
+        "/api/contacts/list": {
+            "post": {
+                "description": "List Contact"
+            }
+        },
+        "/api/contacts/createStored": {
+            "post": {
+                "description": "List Contact Create"
+            }
+        },
+        "/api/contacts/updateStored": {
+            "post": {
+                "description": "List Contact Update"
+            }
+        },
+        "/api/contacts/deleteStored": {
+            "post": {
+                "description": "List Contact delete"
+            }
+        },
+        "/api/contacts/address/detail": {
+            "post": {
+                "description": "get Address address"
+            }
+        },
+        "/api/contacts/address/createStored": {
+            "post": {
+                "description": "List Address Create"
+            }
+        },
+        "/api/contacts/address/updateStored": {
+            "post": {
+                "description": "List Address Update"
+            }
+        },
+        "/api/contacts/address/deleteStored": {
+            "post": {
+                "description": "List Address delete"
+            }
+        },
+        "/api/contacts/address/List": {
+            "get": {
+                "description": "List Address Get By ID"
+            }
+        }
+    }
+}
