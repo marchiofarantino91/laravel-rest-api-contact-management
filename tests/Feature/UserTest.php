@@ -111,28 +111,6 @@ class UserTest extends TestCase
             ]);
     }
 
-    public function testUpdatePasswordSuccess()
-    {
-        $this->seed([UserSeeder::class]);
-        $oldUser = User::where('username', 'admin')->first();
-        $this->post(
-            '/api/users/update',
-            [
-                'password' => 'baru',
-            ],
-            [
-                'Authorization' => 'test'
-            ]
-        )->assertStatus(200)
-            ->assertJson([
-                'data' => [
-                    'username' => 'admin',
-                    'name' => 'administrator',
-                ]
-            ]);
-        $newUser = User::where('username', 'admin')->first();
-        self::assertNotEquals($oldUser->password, $newUser->password);
-    }
     public function testUpdateNameSuccess()
     {
         $this->seed([UserSeeder::class]);
@@ -141,6 +119,7 @@ class UserTest extends TestCase
             '/api/users/update',
             [
                 'name' => 'anonimus',
+                'password_confirm' => 'admins',
             ],
             [
                 'Authorization' => 'test'
@@ -161,27 +140,52 @@ class UserTest extends TestCase
         $this->post(
             '/api/users/update',
             [
-                'name' => 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Molestiae voluptas fugit quaerat cumque possimus eligendi exercitationem deleniti? Perspiciatis laborum ullam, quis consequatur quasi possimus labore vitae animi consequuntur delectus ipsa in fugiat eum obcaecati. Modi optio illum itaque, ab obcaecati voluptate similique, suscipit maiores, neque perspiciatis tenetur cum. Reprehenderit porro quos ratione expedita distinctio ex inventore ipsam, quasi nobis magni voluptatum enim, autem qui officia iusto eum officiis numquam itaque! Fuga, libero nulla. Quisquam a dignissimos eaque autem, ullam unde eligendi tenetur cumque inventore, esse ipsam assumenda, qui deleniti. A fugiat totam soluta, nostrum natus laborum magnam amet nam assumenda.',
+                'name' =>  'anonimus',
+                'password_confirm' => 'admins1',
+
             ],
             [
                 'Authorization' => 'test'
             ]
-        )->assertStatus(400)
+        )->assertStatus(401)
             ->assertJson([
                 'errors' => [
-                    'name' => [
-                        'The name field must not be greater than 100 characters.'
-                    ],
+                    'password_confirm' => [
+                        "Password Wrong."
+                    ]
                 ]
             ]);
     }
-    public function testUpdatePasswordFailed()
+    public function testUpdatePasswordSuccess()
     {
         $this->seed([UserSeeder::class]);
         $this->post(
-            '/api/users/update',
+            '/api/users/updatePassword',
             [
-                'password' => 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Molestiae voluptas fugit quaerat cumque possimus eligendi exercitationem deleniti? Perspiciatis laborum ullam, quis consequatur quasi possimus labore vitae animi consequuntur delectus ipsa in fugiat eum obcaecati. Modi optio illum itaque, ab obcaecati voluptate similique, suscipit maiores, neque perspiciatis tenetur cum. Reprehenderit porro quos ratione expedita distinctio ex inventore ipsam, quasi nobis magni voluptatum enim, autem qui officia iusto eum officiis numquam itaque! Fuga, libero nulla. Quisquam a dignissimos eaque autem, ullam unde eligendi tenetur cumque inventore, esse ipsam assumenda, qui deleniti. A fugiat totam soluta, nostrum natus laborum magnam amet nam assumenda.',
+                'old_password' => 'admins',
+                'new_password' => 'admin123',
+                'repeat_password' => 'admin123',
+            ],
+            [
+                'Authorization' => 'test'
+            ]
+        )->assertStatus(200)
+            ->assertJson([
+                'data' => [
+                    'username' => 'admin',
+                    'name' => 'administrator',
+                ]
+            ]);
+    }
+    public function testUpdatePasswordRepeatFailed()
+    {
+        $this->seed([UserSeeder::class]);
+        $this->post(
+            '/api/users/updatePassword',
+            [
+                'old_password' => 'admins',
+                'new_password' => 'admin123',
+                'repeat_password' => 'admin123s',
             ],
             [
                 'Authorization' => 'test'
@@ -189,9 +193,31 @@ class UserTest extends TestCase
         )->assertStatus(400)
             ->assertJson([
                 'errors' => [
-                    'password' => [
-                        'The password field must not be greater than 50 characters.'
-                    ],
+                    'repeat_password' => [
+                        "The repeat password field must match new password."
+                    ]
+                ]
+            ]);
+    }
+    public function testUpdatePasswordNotMatch()
+    {
+        $this->seed([UserSeeder::class]);
+        $this->post(
+            '/api/users/updatePassword',
+            [
+                'old_password' => 'adminsss',
+                'new_password' => 'admin123',
+                'repeat_password' => 'admin123',
+            ],
+            [
+                'Authorization' => 'test'
+            ]
+        )->assertStatus(401)
+            ->assertJson([
+                'errors' => [
+                    'old_password' => [
+                        "Password Wrong."
+                    ]
                 ]
             ]);
     }

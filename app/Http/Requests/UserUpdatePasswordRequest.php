@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 
-class UserUpdateRequest extends FormRequest
+class UserUpdatePasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,11 +25,11 @@ class UserUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['nullable', 'max:100'],
-            'password_confirm' => ['required', 'max:50'],
+            'old_password' => ['required', 'max:100'],
+            'new_password' => ['required', 'max:100'],
+            'repeat_password' => ['required', 'max:100', 'same:new_password'],
         ];
     }
-
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response([

@@ -117,10 +117,11 @@ class ContactController extends Controller
             $email = $request->input('email');
             $phone = $request->input('phone');
             if ($name) {
-                $builder->where(function (Builder $builder) use ($name) {
-                    $builder->orWhere('first_name', 'like', '%' . $name . '%');
-                    $builder->orWhere('last_name', 'like', '%' . $name . '%');
-                });
+                // $builder->where(function (Builder $builder) use ($name) {
+                //     $builder->orWhere('first_name', 'like', '%' . $name . '%');
+                //     $builder->orWhere('last_name', 'like', '%' . $name . '%');
+                // });
+                $builder->whereAny(['first_name', 'last_name'], 'like', '%' . $name . '%');
             }
             if ($email) {
                 $builder->where('email', 'like', '%' . $email . '%');

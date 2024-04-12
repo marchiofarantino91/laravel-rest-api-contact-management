@@ -27,6 +27,7 @@ Route::middleware(ApiAuthMiddleware::class)->group(function () {
     Route::group(['prefix' => 'users'], function () {
         Route::get('profile', [UserController::class, 'profile']);
         Route::post('update', [UserController::class, 'update']);
+        Route::post('updatePassword', [UserController::class, 'updatePassword']);
         Route::get('logout', [UserController::class, 'logout']);
     });
     Route::group(['prefix' => 'contacts'], function () {

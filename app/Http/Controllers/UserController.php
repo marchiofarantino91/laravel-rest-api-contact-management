@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\UserRegisterRequest;
+use App\Http\Requests\UserUpdatePasswordRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -73,9 +74,39 @@ class UserController extends Controller
         if (isset($data['name'])) {
             $user->name = $data['name'];
         }
-        if (isset($data['password'])) {
-            $user->password = Hash::make($data['password']);
+        if (!Hash::check($data['password_confirm'], $user->password)) {
+            throw new HttpResponseException(response([
+                'errors' => [
+                    'password_confirm' => [
+                        "Password Wrong."
+                    ]
+                ]
+            ], 401));
         }
+
+        // if (isset($data['password'])) {
+        //     $user->password = Hash::make($data['password']);
+        // }
+        $user->save();
+        return new UserResource($user);
+    }
+    public function updatePassword(UserUpdatePasswordRequest $request): UserResource
+    {
+        $data = $request->validated();
+        $user = Auth::user();
+
+        if (Hash::check($data['old_password'], $user->password)) {
+            $user->password = Hash::make($data['new_password']);
+        } else {
+            throw new HttpResponseException(response([
+                'errors' => [
+                    'old_password' => [
+                        "Password Wrong."
+                    ]
+                ]
+            ], 401));
+        }
+
         $user->save();
         return new UserResource($user);
     }
