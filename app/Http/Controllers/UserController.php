@@ -53,7 +53,7 @@ class UserController extends Controller
                         "username or password wrong."
                     ]
                 ]
-            ], 401));
+            ], 400));
         }
 
         $user->token = Str::uuid()->toString();
@@ -81,7 +81,7 @@ class UserController extends Controller
                         "Password Wrong."
                     ]
                 ]
-            ], 401));
+            ], 400));
         }
 
         // if (isset($data['password'])) {
@@ -104,7 +104,7 @@ class UserController extends Controller
                         "Password Wrong."
                     ]
                 ]
-            ], 401));
+            ], 400));
         }
 
         $user->save();

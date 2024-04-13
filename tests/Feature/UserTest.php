@@ -147,7 +147,7 @@ class UserTest extends TestCase
             [
                 'Authorization' => 'test'
             ]
-        )->assertStatus(401)
+        )->assertStatus(400)
             ->assertJson([
                 'errors' => [
                     'password_confirm' => [
@@ -212,7 +212,7 @@ class UserTest extends TestCase
             [
                 'Authorization' => 'test'
             ]
-        )->assertStatus(401)
+        )->assertStatus(400)
             ->assertJson([
                 'errors' => [
                     'old_password' => [
