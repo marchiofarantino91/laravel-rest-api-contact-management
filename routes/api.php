@@ -24,6 +24,9 @@ Route::group(['prefix' => 'users'], function () {
     Route::post('login', [UserController::class, 'login']);
 });
 Route::middleware(ApiAuthMiddleware::class)->group(function () {
+    Route::group(['prefix' => 'blog'], function () {
+        Route::get('profile', [UserController::class, 'profile']);
+    });
     Route::group(['prefix' => 'users'], function () {
         Route::get('profile', [UserController::class, 'profile']);
         Route::post('update', [UserController::class, 'update']);
